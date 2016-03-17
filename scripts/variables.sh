@@ -31,8 +31,7 @@ echo "What root password, would you like to use?"
 read ROOT_PASSWORD
 
 ## TIMEZONE
-echo "What timezone are you in? If you press enter without entering any value,
-the default value of the Australian Eastern Standard Time (AEST) will be used."
+echo "What timezone are you in? If you press enter without entering any value, the default value of the Australian Eastern Standard Time (AEST) will be used."
 read TIMEZONE
 if [[ -z ${TIMEZONE+x} ]]; then
 	TIMEZONE='UTC+10'

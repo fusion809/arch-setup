@@ -1,27 +1,22 @@
-if [[ $BOOT == "BIOS" ]]; then
-	PACKAGES="gptfdisk openssh wpa_supplicant dialog grub"
-	/usr/bin/arch-chroot ${TARGET_DIR} pacman -S --noconfirm $PACKAGES
-	/usr/bin/arch-chroot ${TARGET_DIR} grub-install --target=i386-pc $DISK
-	/usr/bin/arch-chroot ${TARGET_DIR} grub-mkconfig -o /boot/grub/grub.cfg
+cat <<-EOF > "${TARGET_DIR}${CONFIG_SCRIPT}"
+	echo '${FQDN}' > /etc/hostname
+	/usr/bin/ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
+	echo 'KEYMAP=${KEYMAP}' > /etc/vconsole.conf
+	/usr/bin/sed -i 's/#${LANGUAGE}/${LANGUAGE}/' /etc/locale.gen
+	/usr/bin/locale-gen
+	/usr/bin/mkinitcpio -p linux
+	/usr/bin/usermod --password ${ROOT_PASSWORD} root
 
-elif [[ $BOOT == "UEFI" ]]; then
-	parted /dev/sda print
-	PACKAGES="gptfdisk openssh wpa_supplicant dialog"
-	/usr/bin/arch-chroot ${TARGET_DIR} pacman -S --noconfirm $PACKAGES
-	echo "What partition number is your ESP partition on?"
-	read $ESPNO
-	ESP=${TARGET_DIR}/boot/efi
-	mount /dev/sda$ESPNO $ESP
-	cp /boot/initramfs*.img $ESP
-	cp /boot/vmlinuz-linux $ESP
-	bootctl --path=$ESP install
-	echo "#timeout 3
-default arch
-timeout 4
-editor  0" > $ESP/loader/loader.conf
-	my_uuid=$(lsblk /dev/sdb1 -no UUID)
-	echo "title    Arch Linux
-linux    /vmlinuz-linux
-initrd   /initramfs-linux.img
-options  root=UUID=${my_uuid} rw" > $ESP/loader/entries/arch.conf
-fi
+	# Vagrant-specific configuration
+	/usr/bin/useradd --password ${USER_PASSWORD} --comment 'administrative user' --create-home --gid users ${USERNAME}
+  /usr/bin/gpasswd -a ${USERNAME} wheel
+
+  /usr/bin/sed -i "s/^#%wheel/%wheel/g" /etc/sudoers
+
+	# clean up
+	/usr/bin/pacman -Rcns --noconfirm gptfdisk
+EOF
+
+echo '==> entering chroot and configuring system'
+/usr/bin/arch-chroot ${TARGET_DIR} ${CONFIG_SCRIPT}
+rm "${TARGET_DIR}${CONFIG_SCRIPT}"
