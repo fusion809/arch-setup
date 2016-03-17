@@ -19,17 +19,19 @@ cat <<-EOF > "${TARGET_DIR}${CONFIG_SCRIPT}"
   echo "[home_fusion809_arch_extra_Arch_Extra]
 SigLevel = Never
 Server = http://download.opensuse.org/repositories/home:/fusion809:/arch_extra/Arch_Extra/$arch" >> /etc/pacman.conf
-  pacman -Syu --noconfirm
-  pacman -S broadcom-wl-dkms
+  /usr/bin/pacman -Syu --noconfirm
+  /usr/bin/pacman -S broadcom-wl-dkms yaourt --noconfirm
 
-	chsh -s /bin/zsh $USERNAME
-	chsh -s /bin/zsh
+	/usr/bin/chsh -s /bin/zsh $USERNAME
+	/usr/bin/chsh -s /bin/zsh
 	cd /home/$USERNAME
-	git clone https://github.com/robbyrussell/oh-my-zsh .oh-my-zsh
-	mkdir GitHub
-	git clone https://github.com/fusion809/arch-scripts GitHub/arch-scripts
-	cp -a GitHub/arch-scripts/{Shell,.bashrc,.zshrc} .
-	cp -a GitHub/arch-scripts/root/{Shell,.bashrc,.zshrc} /root/
+	/usr/bin/git clone https://github.com/robbyrussell/oh-my-zsh .oh-my-zsh
+	/usr/bin/mkdir GitHub
+	/usr/bin/git clone https://github.com/fusion809/arch-scripts GitHub/arch-scripts
+	/usr/bin/cp -a GitHub/arch-scripts/{Shell,.bashrc,.zshrc} .
+	/usr/bin/cp -a GitHub/arch-scripts/root/{Shell,.bashrc,.zshrc} /root/
+	/usr/bin/git clone https://github.com/fusion809/zsh-theme GitHub/zsh-theme
+	/usr/bin/cp -a GitHub/zsh-theme/{hcompat,hornix}.zsh-theme .oh-my-zsh/themes/
 
 	# clean up
 	/usr/bin/pacman -Rcns --noconfirm gptfdisk
