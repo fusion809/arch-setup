@@ -43,3 +43,8 @@ TARGET_DIR='/mnt'
 ## Mount EFI partition
 echo "What type of firmware does your computer use for hardware initialization? Answer either BIOS or UEFI."
 read BOOT
+
+if [[ $BOOT == "BIOS" ]]; then
+	echo "What bootloader do you want to use?"
+	read $BOOTLOADER
+fi

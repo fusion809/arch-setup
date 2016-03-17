@@ -1,6 +1,4 @@
 if [[ $BOOT == "BIOS" ]]; then
-	echo "What bootloader do you want to use?"
-	read $BOOTLOADER
 	if [[ $BOOTLOADER == "GRUB2" ]]; then
 		/usr/bin/arch-chroot ${TARGET_DIR} pacman -S --noconfirm grub
 		/usr/bin/arch-chroot ${TARGET_DIR} grub-install --target=i386-pc $DISK
