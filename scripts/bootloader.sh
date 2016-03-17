@@ -1,7 +1,16 @@
 if [[ $BOOT == "BIOS" ]]; then
-	/usr/bin/arch-chroot ${TARGET_DIR} pacman -S --noconfirm grub
-	/usr/bin/arch-chroot ${TARGET_DIR} grub-install --target=i386-pc $DISK
-	/usr/bin/arch-chroot ${TARGET_DIR} grub-mkconfig -o /boot/grub/grub.cfg
+	echo "What bootloader do you want to use?"
+	read $BOOTLOADER
+	if [[ $BOOTLOADER == "GRUB2" ]]; then
+		/usr/bin/arch-chroot ${TARGET_DIR} pacman -S --noconfirm grub
+		/usr/bin/arch-chroot ${TARGET_DIR} grub-install --target=i386-pc $DISK
+		/usr/bin/arch-chroot ${TARGET_DIR} grub-mkconfig -o /boot/grub/grub.cfg
+	elif [[ $BOOTLOADER== "syslinux" ]]; then
+		/usr/bin/arch-chroot ${TARGET_DIR} pacman -S --noconfirm syslinux
+		/usr/bin/arch-chroot ${TARGET_DIR} syslinux-install_update -i -a -m
+		/usr/bin/sed -i 's/sda3/sda1/' "${TARGET_DIR}/boot/syslinux/syslinux.cfg"
+		/usr/bin/sed -i 's/TIMEOUT 50/TIMEOUT 10/' "${TARGET_DIR}/boot/syslinux/syslinux.cfg"
+	fi
 
 elif [[ $BOOT == "UEFI" ]]; then
 	parted /dev/sda print
@@ -21,4 +30,8 @@ editor  0" > $ESP/loader/loader.conf
 linux    /vmlinuz-linux
 initrd   /initramfs-linux.img
 options  root=UUID=${my_uuid} rw" > $ESP/loader/entries/arch.conf
+else
+	echo "You must set your hardware initialization firmware as either BIOS or UEFI"
+	read BOOT
+	. "scripts/bootloader.sh"
 fi
