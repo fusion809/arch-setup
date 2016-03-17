@@ -13,17 +13,14 @@ echo "==> mounting ${ROOT_PARTITION} to ${TARGET_DIR}"
 # Bootstrapping base installation.
 echo '==> bootstrapping the base installation'
 /usr/bin/pacstrap ${TARGET_DIR} base base-devel
-. "scripts/config-base.sh"
+. "scripts/package-base.sh"
+
+. "scripts/bootloader.sh"
 
 echo '==> generating the filesystem table'
 /usr/bin/genfstab -p ${TARGET_DIR} >> "${TARGET_DIR}/etc/fstab"
 
-echo '==> generating the system configuration script'
-/usr/bin/install --mode=0755 /dev/null "${TARGET_DIR}${CONFIG_SCRIPT}"
-
-echo '==> entering chroot and configuring system'
-/usr/bin/arch-chroot ${TARGET_DIR} ${CONFIG_SCRIPT}
-rm "${TARGET_DIR}${CONFIG_SCRIPT}"
+. "scripts/config-base.sh"
 
 echo '==> adding workaround for shutdown race condition'
 /usr/bin/install --mode=0644 poweroff.timer "${TARGET_DIR}/etc/systemd/system/poweroff.timer"

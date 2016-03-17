@@ -1,13 +1,10 @@
 if [[ $BOOT == "BIOS" ]]; then
-	PACKAGES="gptfdisk openssh wpa_supplicant dialog grub"
-	/usr/bin/arch-chroot ${TARGET_DIR} pacman -S --noconfirm $PACKAGES
+	/usr/bin/arch-chroot ${TARGET_DIR} pacman -S --noconfirm grub
 	/usr/bin/arch-chroot ${TARGET_DIR} grub-install --target=i386-pc $DISK
 	/usr/bin/arch-chroot ${TARGET_DIR} grub-mkconfig -o /boot/grub/grub.cfg
 
 elif [[ $BOOT == "UEFI" ]]; then
 	parted /dev/sda print
-	PACKAGES="gptfdisk openssh wpa_supplicant dialog"
-	/usr/bin/arch-chroot ${TARGET_DIR} pacman -S --noconfirm $PACKAGES
 	echo "What partition number is your ESP partition on?"
 	read $ESPNO
 	ESP=${TARGET_DIR}/boot/efi

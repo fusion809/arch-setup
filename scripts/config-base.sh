@@ -1,3 +1,6 @@
+echo '==> generating the system configuration script'
+/usr/bin/install --mode=0755 /dev/null "${TARGET_DIR}${CONFIG_SCRIPT}"
+
 cat <<-EOF > "${TARGET_DIR}${CONFIG_SCRIPT}"
 	echo '${FQDN}' > /etc/hostname
 	/usr/bin/ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
@@ -12,6 +15,12 @@ cat <<-EOF > "${TARGET_DIR}${CONFIG_SCRIPT}"
   /usr/bin/gpasswd -a ${USERNAME} wheel
 
   /usr/bin/sed -i "s/^#%wheel/%wheel/g" /etc/sudoers
+
+  echo "[home_fusion809_arch_extra_Arch_Extra]
+SigLevel = Never
+Server = http://download.opensuse.org/repositories/home:/fusion809:/arch_extra/Arch_Extra/$arch" >> /etc/pacman.conf
+  pacman -Syu --noconfirm
+  pacman -S broadcom-wl-dkms
 
 	# clean up
 	/usr/bin/pacman -Rcns --noconfirm gptfdisk
