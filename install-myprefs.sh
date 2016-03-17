@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# This script is for automating the installation of Arch Linux and getting it ready for use on a laptop, potentially, with a Broadcom chip.
 
 echo "Welcome to fusion809's automated Arch Linux installer, forked from https://github.com/elasticdog/packer-arch's install-base.sh script."
 
@@ -13,15 +14,14 @@ echo "==> mounting ${ROOT_PARTITION} to ${TARGET_DIR}"
 # Bootstrapping base installation.
 echo '==> bootstrapping the base installation'
 /usr/bin/pacstrap ${TARGET_DIR} base base-devel
+. "scripts/package-myprefs.sh"
+
 . "scripts/bootloader.sh"
 
 echo '==> generating the filesystem table'
 /usr/bin/genfstab -p ${TARGET_DIR} >> "${TARGET_DIR}/etc/fstab"
 
-echo '==> generating the system configuration script'
-/usr/bin/install --mode=0755 /dev/null "${TARGET_DIR}${CONFIG_SCRIPT}"
-
-. "scripts/config-base.sh"
+. "scripts/config-myprefs.sh"
 
 echo '==> adding workaround for shutdown race condition'
 /usr/bin/install --mode=0644 poweroff.timer "${TARGET_DIR}/etc/systemd/system/poweroff.timer"

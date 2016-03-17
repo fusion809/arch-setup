@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# This script is for automating the installation of Arch Linux and getting it ready for use on a laptop, potentially, with a Broadcom chip.
 
 echo "Welcome to fusion809's automated Arch Linux installer, forked from https://github.com/elasticdog/packer-arch's install-base.sh script."
 
