@@ -1,6 +1,21 @@
 echo '==> generating the system configuration script'
 /usr/bin/install --mode=0755 /dev/null "${TARGET_DIR}${CONFIG_SCRIPT}"
 
+USER_CONFIG_SCRIPT=/usr/local/bin/arch-user-config.sh
+
+cat <<-EOF > "${TARGET_DIR}${USER_CONFIG_SCRIPT}"
+cd /home/$USERNAME
+/usr/bin/git clone https://github.com/robbyrussell/oh-my-zsh .oh-my-zsh
+/usr/bin/mkdir GitHub
+/usr/bin/git clone https://github.com/fusion809/arch-scripts GitHub/arch-scripts
+/usr/bin/cp -a GitHub/arch-scripts/{Shell,.bashrc,.zshrc} .
+/usr/bin/cp -a GitHub/arch-scripts/root/{Shell,.bashrc,.zshrc} /root/
+/usr/bin/git clone https://github.com/fusion809/zsh-theme GitHub/zsh-theme
+/usr/bin/cp -a GitHub/zsh-theme/{hcompat,hornix}.zsh-theme .oh-my-zsh/themes/
+
+/usr/bin/yaourt -S google-chrome atom-editor supertux-old --noconfirm
+EOF
+
 cat <<-EOF > "${TARGET_DIR}${CONFIG_SCRIPT}"
 	echo '${FQDN}' > /etc/hostname
 	/usr/bin/ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
@@ -28,14 +43,8 @@ Server = http://download.opensuse.org/repositories/home:/fusion809:/arch_extra/A
 
 	/usr/bin/chsh -s /bin/zsh $USERNAME
 	/usr/bin/chsh -s /bin/zsh
-	cd /home/$USERNAME
-	/usr/bin/git clone https://github.com/robbyrussell/oh-my-zsh .oh-my-zsh
-	/usr/bin/mkdir GitHub
-	/usr/bin/git clone https://github.com/fusion809/arch-scripts GitHub/arch-scripts
-	/usr/bin/cp -a GitHub/arch-scripts/{Shell,.bashrc,.zshrc} .
-	/usr/bin/cp -a GitHub/arch-scripts/root/{Shell,.bashrc,.zshrc} /root/
-	/usr/bin/git clone https://github.com/fusion809/zsh-theme GitHub/zsh-theme
-	/usr/bin/cp -a GitHub/zsh-theme/{hcompat,hornix}.zsh-theme .oh-my-zsh/themes/
+
+	su - $USERNAME -c ${USER_CONFIG_SCRIPT}
 
 	# clean up
 	/usr/bin/pacman -Rcns --noconfirm gptfdisk
