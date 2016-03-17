@@ -31,9 +31,9 @@ cat <<-EOF > "${TARGET_DIR}${CONFIG_SCRIPT}"
 
   /usr/bin/sed -i "s/^#%wheel/%wheel/g" /etc/sudoers
 
-  echo "[home_fusion809_arch_extra_Arch_Extra]
+  echo ''[home_fusion809_arch_extra_Arch_Extra]
 SigLevel = Never
-Server = http://download.opensuse.org/repositories/home:/fusion809:/arch_extra/Arch_Extra/$arch" >> /etc/pacman.conf
+Server = http://download.opensuse.org/repositories/home:/fusion809:/arch_extra/Arch_Extra/$arch' >> /etc/pacman.conf
   /usr/bin/pacman -Syu --noconfirm
 	MY_PACKS="broadcom-wl-dkms bumblebee docker kde-applications-meta octave plasma-meta sagemath supertux virtualbox xf86-video-intel xf86-video-nouveau xorg yaourt"
   /usr/bin/pacman -S ${MY_PACKS} --noconfirm
