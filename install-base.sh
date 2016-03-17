@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Welcome to fusion809's automated Arch Linux installer, \nforked from https://github.com/elasticdog/packer-arch's install-base.sh script"
+echo "Welcome to fusion809's automated Arch Linux installer, forked from https://github.com/elasticdog/packer-arch's install-base.sh script."
 
 . "scripts/variables.sh"
 
@@ -21,7 +21,7 @@ echo '==> generating the filesystem table'
 echo '==> generating the system configuration script'
 /usr/bin/install --mode=0755 /dev/null "${TARGET_DIR}${CONFIG_SCRIPT}"
 
-. "scripts/config.sh"
+. "scripts/config-base.sh"
 
 echo '==> entering chroot and configuring system'
 /usr/bin/arch-chroot ${TARGET_DIR} ${CONFIG_SCRIPT}
