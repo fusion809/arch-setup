@@ -4,6 +4,10 @@
 echo "Which disk do you wish to install Arch Linux on?"
 read DISK
 
+## Whole disk
+echo "Do you want to use the entire disk? [y/n]"
+read ENTIRE
+
 ## KEYMAP
 KEYMAP='us'
 
@@ -35,7 +39,6 @@ if [[ -z ${TIMEZONE+x} ]]; then
 fi
 
 CONFIG_SCRIPT='/usr/local/bin/arch-config.sh'
-ROOT_PARTITION="${DISK}1"
 TARGET_DIR='/mnt'
 
 ## Mount EFI partition
