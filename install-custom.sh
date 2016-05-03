@@ -3,9 +3,9 @@
 
 echo "Welcome to fusion809's automated Arch Linux installer, forked from https://github.com/elasticdog/packer-arch's install-base.sh script."
 
-. "scripts/variables.sh"
+. "scripts/01-variables.sh"
 
-. "scripts/disks.sh"
+. "scripts/02-disks.sh"
 
 # Mount partition to target directory
 echo "==> mounting ${ROOT_PARTITION} to ${TARGET_DIR}"
@@ -14,14 +14,14 @@ echo "==> mounting ${ROOT_PARTITION} to ${TARGET_DIR}"
 # Bootstrapping base installation.
 echo '==> bootstrapping the base installation'
 /usr/bin/pacstrap ${TARGET_DIR} base base-devel
-. "scripts/package-custom.sh"
+. "scripts/06-package-custom.sh"
 
-. "scripts/bootloader.sh"
+. "scripts/04-bootloader.sh"
 
 echo '==> generating the filesystem table'
 /usr/bin/genfstab -p ${TARGET_DIR} >> "${TARGET_DIR}/etc/fstab"
 
-. "scripts/config-custom.sh"
+. "scripts/07-config-custom.sh"
 
 echo '==> adding workaround for shutdown race condition'
 /usr/bin/install --mode=0644 poweroff.timer "${TARGET_DIR}/etc/systemd/system/poweroff.timer"
